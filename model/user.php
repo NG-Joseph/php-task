@@ -44,6 +44,26 @@ class User {
     public function setLastName($lastName) {
         $this->lastName = $lastName;
     }
+
+    function getCurrentUser() {
+        // Add your authentication logic here.
+        // This is just a placeholder; you might use session, cookies, or any other method.
+        
+        // For example, if using session:
+        session_start();
+    
+        if (isset($_SESSION['user_id'])) {
+            // Assuming you have a method to fetch user details based on the user ID
+            $user = getUserById($_SESSION['user_id']);
+    
+            if ($user) {
+                return $user;
+            }
+        }
+    
+        // If not authenticated, return null or redirect to the login page.
+        return null;
+    }
 }
 
 ?>

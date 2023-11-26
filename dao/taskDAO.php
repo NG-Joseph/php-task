@@ -9,6 +9,7 @@ error_reporting(0);
  *
  * @author Beulah Nwokotubo
  */
+
 class TaskDAO extends AbstractDAO {
 
     function __construct() {
@@ -19,21 +20,26 @@ class TaskDAO extends AbstractDAO {
         }
     }
 
-    public function getTasks() {
-        $result = $this->mysqli->query('SELECT * FROM tasks');
-        $tasks = Array();
+    private $user_id;
 
-        if ($result->num_rows >= 1) {
-            while ($row = $result->fetch_assoc()) {
-                $task = new Task($row['taskId'], $row['taskName'], $row['priority'], $row['dueDate'], $row['status']);
-                $tasks[] = $task;
-            }
-            $result->free();
-            return $tasks;
+
+    public function getTasks($user_id) {
+        $query = 'SELECT * FROM tasks WHERE user_id = ?';
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $tasks = array();
+    
+        while ($row = $result->fetch_assoc()) {
+            $task = new Task($row['taskId'], $row['taskName'], $row['priority'], $row['dueDate'], $row['status']);
+            $task->setUserId($row['user_id']);
+            $tasks[] = $task;
         }
-
+    
         $result->free();
-        return false;
+        return $tasks;
     }
 
     public function getTask($taskId) {
@@ -113,6 +119,18 @@ class TaskDAO extends AbstractDAO {
         } else {
             return false;
         }
+    }
+
+
+
+    // Existing constructor...
+
+    public function getUserId() {
+        return $this->user_id;
+    }
+
+    public function setUserId($user_id) {
+        $this->user_id = $user_id;
     }
 
     // Add methods for updating and deleting tasks as needed

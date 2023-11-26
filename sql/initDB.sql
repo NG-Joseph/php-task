@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS tasks (
     priority ENUM('low', 'medium', 'high') NOT NULL,
     dueDate DATE,
     status ENUM('pending', 'completed') DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    userId INT 
 );
 
 -- Create a table for users

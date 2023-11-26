@@ -1,4 +1,14 @@
-<?php require_once('./dao/taskDAO.php'); ?>
+<?php require_once('./dao/taskDAO.php'); 
+require_once('./dao/userDAO.php'); // Include the UserDAO file
+// Get the current user using the UserDAO
+$userDAO = new UserDAO();
+$user = $userDAO->getCurrentUser();
+
+if (!$user) {
+    // Redirect to the login page or handle unauthorized access
+    header("Location: login.php");
+    exit;
+}?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -137,22 +147,22 @@
             echo '<h1>Task Management System</h1>';
             echo '<h2>Task List</h2>';
 
-            $tasks = $taskDAO->getTasks();
+            $tasks = $taskDAO->getTasks($user->getId());
 
             if ($tasks) {
                 echo '<table border="1">';
                 echo '<tr><th>Task ID</th><th>Task Name</th><th>Priority</th><th>Due Date</th><th>Status</th></tr>';
                 foreach ($tasks as $task) {
                     echo '<tr>';
-                    echo '<td>' . $task['task_id'] . '</td>';
-                    echo '<td>' . $task['task_name'] . '</td>';
-                    echo '<td>' . $task['priority'] . '</td>';
-                    echo '<td>' . $task['due_date'] . '</td>';
-                    echo '<td>' . $task['status'] . '</td>';
+                    echo '<td>' . $task->getTaskId() . '</td>';
+                    echo '<td>' . $task->getTaskName() . '</td>';
+                    echo '<td>' . $task->getPriority() . '</td>';
+                    echo '<td>' . $task->getDueDate() . '</td>';
+                    echo '<td>' . $task->getStatus() . '</td>';
                     echo '</tr>';
                 }
                 echo '</table>';
-            } 
+            }
             // else {
             //     echo '<p>No tasks found.</p>';
             // }
