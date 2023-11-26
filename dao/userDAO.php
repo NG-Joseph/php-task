@@ -83,7 +83,7 @@ class UserDAO extends AbstractDAO {
     }
 
     public function addUser(User $user) {
-        $query = 'INSERT INTO users (email, firstName, lastName, hashedPassword) VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO users (email, firstName, lastName, password) VALUES (?, ?, ?, ?)';
         $stmt = $this->mysqli->prepare($query);
         $email = $user->getEmail();
         $firstName = $user->getFirstName();

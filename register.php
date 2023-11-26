@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             // Create a new user object
-            $newUser = new User(null, $email, $firstName, $lastName, $hashedPassword);
+            $newUser = new User(null, $email, $firstName, $lastName, password: $hashedPassword);
 
             // Add the new user to the database
             $userDAO->addUser($newUser);
@@ -65,5 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <input type="submit" name="btnRegister" id="btnRegister" value="Register">
     </form>
+    <p>Don't have an account? <a href="register.php">Register</a></p>
 </body>
 </html>

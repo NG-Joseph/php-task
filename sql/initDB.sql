@@ -13,6 +13,15 @@ FLUSH PRIVILEGES;
 -- Use the task_management database
 USE task_management;
 
+-- Create a table for users
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    firstName VARCHAR(255) NOT NULL,
+    lastName VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL
+);
+
 -- Create a table for tasks
 CREATE TABLE IF NOT EXISTS tasks (
     taskId INT AUTO_INCREMENT PRIMARY KEY,
@@ -21,14 +30,6 @@ CREATE TABLE IF NOT EXISTS tasks (
     dueDate DATE,
     status ENUM('pending', 'completed') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    userId INT 
+    userId INT,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
-
--- Create a table for users
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    firstName VARCHAR(255) NOT NULL,
-    lastName VARCHAR(255) NOT NULL
-);
-
