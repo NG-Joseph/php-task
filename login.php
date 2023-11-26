@@ -11,9 +11,9 @@ if (isset($_POST['btnLogin'])) {
         $userDAO = new UserDAO();
         $user = $userDAO->getUserByEmail($email);
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user->getPassword())) {
             // Authentication successful, redirect to the dashboard or home page
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['userId'] = $user->getPassword();
             header("Location: dashboard.php");
             exit();
         } else {

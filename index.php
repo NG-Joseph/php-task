@@ -60,7 +60,7 @@ if (!$user) {
                     }
 
                     if(!$hasError){
-                        $task = new Task($_POST['taskId'], $_POST['taskName'], $_POST['priority'], $_POST['dueDate'], $_POST['status']);
+                        $task = new Task($_POST['taskId'], $_POST['taskName'], $_POST['priority'], $_POST['dueDate'], $_POST['status'], $user->getId());
                         $addSuccess = $taskDAO->addTask($task);
                         echo '<h3>' . $addSuccess . '</h3>';
                     }

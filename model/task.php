@@ -5,15 +5,15 @@ class Task {
     private $priority;
     private $dueDate;
     private $status;
-    private $user_id;
+    private $userId;
 
-    function __construct($taskId, $taskName, $priority, $dueDate, $status, $user_id) {
+    function __construct($taskId, $taskName, $priority, $dueDate, $status, $userId) {
         $this->setTaskId($taskId);
         $this->setTaskName($taskName);
         $this->setPriority($priority);
         $this->setDueDate($dueDate);
         $this->setStatus($status);
-        $this->setUserId($user_id);
+        $this->setUserId($userId);
     }
 
     public function getTaskId() {
@@ -57,11 +57,11 @@ class Task {
     }
 
     public function getUserId() {
-        return $this->user_id;
+        return $this->userId;
     }
 
-    public function setUserId($user_id) {
-        $this->user_id = $user_id;
+    public function setUserId($userId) {
+        $this->userId = $userId;
     }
 }
 ?>

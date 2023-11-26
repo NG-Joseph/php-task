@@ -4,13 +4,13 @@ require_once('./dao/userDAO.php');
 
 // Assuming you have a user authentication system, you might get the user ID from the session
 session_start();
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['userId'])) {
     header('Location: login.php');
     exit();
 }
 
 $userDAO = new UserDAO();
-$user = $userDAO->getUserById($_SESSION['user_id']);
+$user = $userDAO->getUserById($_SESSION['userId']);
 
 // Check if the 'action' parameter is set in the URL
 if (isset($_GET['action'])) {
@@ -37,7 +37,7 @@ if (isset($_GET['action'])) {
                 
                 // Check if the user is authorized to edit this task
                 $task = $taskDAO->getTask($_POST['taskId']);
-                if ($task && $task['user_id'] == $user['id']) {
+                if ($task && $task->getUserId() == $user->getId())  {
                     // Call the editTask method with the provided parameters
                     $result = $taskDAO->editTask(
                         $_POST['taskId'],
@@ -70,7 +70,7 @@ if (isset($_GET['action'])) {
 
             // Check if the user is authorized to delete this task
             $task = $taskDAO->getTask($_GET['taskId']);
-            if ($task && $task['user_id'] == $user['id']) {
+            if ($task && $task->getUserId() == $user->getId()) {
                 $success = $taskDAO->deleteTask($_GET['taskId']);
                 if ($success) {
                     header('Location: index.php?deleted=true');

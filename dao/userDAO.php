@@ -15,8 +15,8 @@ class UserDAO extends AbstractDAO {
     public function getCurrentUser() {
         session_start();
         
-        if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id'];
+        if (isset($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
             return $this->getUserById($userId);
         }
 
@@ -37,7 +37,7 @@ class UserDAO extends AbstractDAO {
             if (password_verify($password, $hashedPassword)) {
                 // Password is correct, set session
                 session_start();
-                $_SESSION['user_id'] = $temp['id'];
+                $_SESSION['userId'] = $temp['id'];
                 return true;
             }
         }
@@ -55,7 +55,7 @@ class UserDAO extends AbstractDAO {
 
         if ($result->num_rows == 1) {
             $temp = $result->fetch_assoc();
-            $user = new User($temp['id'], $temp['email'], $temp['firstName'], $temp['lastName']);
+            $user = new User($temp['id'], $temp['email'], $temp['firstName'], $temp['lastName'], $temp['password']);
             $result->free();
             return $user;
         }
@@ -73,7 +73,7 @@ class UserDAO extends AbstractDAO {
 
         if ($result->num_rows == 1) {
             $temp = $result->fetch_assoc();
-            $user = new User($temp['id'], $temp['email'], $temp['firstName'], $temp['lastName']);
+            $user = new User($temp['id'], $temp['email'], $temp['firstName'], $temp['lastName'], $temp['password']);
             $result->free();
             return $user;
         }

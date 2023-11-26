@@ -20,21 +20,21 @@ class TaskDAO extends AbstractDAO {
         }
     }
 
-    private $user_id;
+    private $userId;
 
 
-    public function getTasks($user_id) {
-        $query = 'SELECT * FROM tasks WHERE user_id = ?';
+    public function getTasks($userId) {
+        $query = 'SELECT * FROM tasks WHERE userId = ?';
         $stmt = $this->mysqli->prepare($query);
-        $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('i', $userId);
         $stmt->execute();
         $result = $stmt->get_result();
     
         $tasks = array();
     
         while ($row = $result->fetch_assoc()) {
-            $task = new Task($row['taskId'], $row['taskName'], $row['priority'], $row['dueDate'], $row['status']);
-            $task->setUserId($row['user_id']);
+            $task = new Task($row['taskId'], $row['taskName'], $row['priority'], $row['dueDate'], $row['status'], $userId);
+            $task->setUserId($row['']);
             $tasks[] = $task;
         }
     
@@ -51,7 +51,7 @@ class TaskDAO extends AbstractDAO {
 
         if ($result->num_rows == 1) {
             $temp = $result->fetch_assoc();
-            $task = new Task($temp['taskId'], $temp['taskName'], $temp['priority'], $temp['dueDate'], $temp['status']);
+            $task = new Task($temp['taskId'], $temp['taskName'], $temp['priority'], $temp['dueDate'], $temp['status'], $temp['userId']);
             $result->free();
             return $task;
         }
@@ -126,11 +126,11 @@ class TaskDAO extends AbstractDAO {
     // Existing constructor...
 
     public function getUserId() {
-        return $this->user_id;
+        return $this->userId;
     }
 
-    public function setUserId($user_id) {
-        $this->user_id = $user_id;
+    public function setUserId($userId) {
+        $this->userId = $userId;
     }
 
     // Add methods for updating and deleting tasks as needed

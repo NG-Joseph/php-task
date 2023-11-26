@@ -5,14 +5,14 @@ require_once('./dao/userDAO.php');
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['userId'])) {
     header('Location: login.php');
     exit();
 }
 
 // Get the logged-in user
 $userDAO = new UserDAO();
-$user = $userDAO->getUserById($_SESSION['user_id']);
+$user = $userDAO->getUserById($_SESSION['userId']);
 
 if (!isset($_GET['taskId']) || !is_numeric($_GET['taskId'])) {
     // Send the user back to the main page
@@ -23,7 +23,7 @@ if (!isset($_GET['taskId']) || !is_numeric($_GET['taskId'])) {
     $task = $taskDAO->getTask($_GET['taskId']);
 
     // Check if the task exists and if the logged-in user is authorized to edit it
-    if ($task && $task['user_id'] == $user['id']) {
+    if ($task && $task->getUserId() == $user->getId())  {
         ?>
         <!DOCTYPE html>
         <html>
