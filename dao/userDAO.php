@@ -2,8 +2,6 @@
 require_once('abstractDAO.php');
 require_once('./model/user.php');
 
-error_reporting(0);
-
 class UserDAO extends AbstractDAO {
 
     function __construct() {
@@ -13,6 +11,40 @@ class UserDAO extends AbstractDAO {
             throw $e;
         }
     }
+
+    public function getCurrentUser() {
+        session_start();
+        
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+            return $this->getUserById($userId);
+        }
+
+        return false;
+    }
+
+    public function login($email, $password) {
+        $query = 'SELECT * FROM users WHERE email = ?';
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 1) {
+            $temp = $result->fetch_assoc();
+            $hashedPassword = $temp['hashedPassword']; // Assuming your password is stored as a hash in the database
+
+            if (password_verify($password, $hashedPassword)) {
+                // Password is correct, set session
+                session_start();
+                $_SESSION['user_id'] = $temp['id'];
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
 
     public function getUserByEmail($email) {
         $query = 'SELECT * FROM users WHERE email = ?';
@@ -32,7 +64,70 @@ class UserDAO extends AbstractDAO {
         return false;
     }
 
-    // You can add more methods for user-related operations here, such as addUser, updateUser, etc.
+    public function getUserById($userId) {
+        $query = 'SELECT * FROM users WHERE id = ?';
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 1) {
+            $temp = $result->fetch_assoc();
+            $user = new User($temp['id'], $temp['email'], $temp['firstName'], $temp['lastName']);
+            $result->free();
+            return $user;
+        }
+
+        $result->free();
+        return false;
+    }
+
+    public function addUser(User $user) {
+        $query = 'INSERT INTO users (email, firstName, lastName, hashedPassword) VALUES (?, ?, ?, ?)';
+        $stmt = $this->mysqli->prepare($query);
+        $email = $user->getEmail();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $password = $user->getPassword(); // Assuming you have a getPassword method in your User class
+
+        // Assuming your password is hashed before storing it in the database
+        // If not, you should hash it before binding to the statement
+        // Example: $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt->bind_param('ssss', $email, $firstName, $lastName, $password);
+        
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateUser($userId, $email, $firstName, $lastName) {
+        $query = 'UPDATE users SET email = ?, firstName = ?, lastName = ? WHERE id = ?';
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param('sssi', $email, $firstName, $lastName, $userId);
+        
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteUser($userId) {
+        $query = 'DELETE FROM users WHERE id = ?';
+        $stmt = $this->mysqli->prepare($query);
+        $stmt->bind_param('i', $userId);
+        
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // You can add more methods for user-related operations here.
 
     public function __destruct() {
         $this->mysqli->close();

@@ -5,12 +5,14 @@ class User {
     private $email;
     private $firstName;
     private $lastName;
+    private $password;
 
-    public function __construct($id, $email, $firstName, $lastName) {
+    public function __construct($id, $email, $firstName, $lastName, $password) {
         $this->setId($id);
         $this->setEmail($email);
         $this->setFirstName($firstName);
         $this->setLastName($lastName);
+        $this->setPassword($password);
     }
 
     public function getId() {
@@ -45,25 +47,12 @@ class User {
         $this->lastName = $lastName;
     }
 
-    function getCurrentUser() {
-        // Add your authentication logic here.
-        // This is just a placeholder; you might use session, cookies, or any other method.
-        
-        // For example, if using session:
-        session_start();
-    
-        if (isset($_SESSION['user_id'])) {
-            // Assuming you have a method to fetch user details based on the user ID
-            $user = getUserById($_SESSION['user_id']);
-    
-            if ($user) {
-                return $user;
-            }
-        }
-    
-        // If not authenticated, return null or redirect to the login page.
-        return null;
+    public function getPassword() {
+        return $this->password;
+    }
+
+    public function setPassword($password) {
+        $this->password = $password;
     }
 }
-
 ?>
